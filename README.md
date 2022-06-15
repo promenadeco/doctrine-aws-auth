@@ -57,6 +57,15 @@ $entityManager = EntityManager::create(
 );
 ```
 
+Activate token caching to stay within rate limits and improve performance:
+```php
+use Promenade\Doctrine\Aws\Auth\Token\CachingProxy;
+
+// ...
+
+$tokenProvider = new CachingProxy($tokenProvider, $ormConfig->getMetadataCache());
+```
+
 Enable IAM authentication using the following environment variables:
 ```ini
 AWS_REGION=us-east-1
