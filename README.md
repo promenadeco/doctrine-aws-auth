@@ -20,12 +20,9 @@ composer require promenadeco/doctrine-aws-auth
 Register the DBAL driver middleware in Doctrine ORM:
 
 ```php
-use Aws\Credentials\CredentialProvider;
-use Aws\Rds\AuthTokenGenerator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Promenade\Doctrine\Aws\Auth\Driver\IamMiddleware;
-use Promenade\Doctrine\Aws\Auth\Token\CachingProxy;
 use Promenade\Doctrine\Aws\Auth\Token\RdsToken;
 
 // ...
@@ -34,9 +31,7 @@ $ormConfig = ORMSetup::createAnnotationMetadataConfiguration([
     'src/Entity',
 ]);
 
-$tokenGenerator = new AuthTokenGenerator(CredentialProvider::defaultProvider());
-$tokenProvider = new RdsToken($tokenGenerator);
-$tokenProvider = new CachingProxy($tokenProvider, $ormConfig->getMetadataCache());
+$tokenProvider = new RdsToken();
 $ormConfig->setMiddlewares([
     new IamMiddleware($tokenProvider),
 ]);

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Promenade\Doctrine\Aws\Auth\Token;
 
+use Aws\Credentials\CredentialProvider;
 use Aws\Rds\AuthTokenGenerator;
 
 /**
@@ -15,14 +16,14 @@ class RdsToken implements TokenProvider
     private int $lifetime;
 
     /**
-     * @param AuthTokenGenerator $generator
+     * @param AuthTokenGenerator|null $generator
      * @param int $lifetime Token TTL in minutes
      */
     public function __construct(
-        AuthTokenGenerator $generator,
+        AuthTokenGenerator $generator = null,
         int $lifetime = 15
     ) {
-        $this->generator = $generator;
+        $this->generator = $generator ?: new AuthTokenGenerator(CredentialProvider::defaultProvider());
         $this->lifetime = $lifetime;
     }
 
