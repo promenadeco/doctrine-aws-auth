@@ -45,7 +45,6 @@ $entityManager = EntityManager::create(
        'driver' => 'mysqli',
        'driverOptions' => [
             'flags' => MYSQLI_CLIENT_SSL,
-            MYSQLI_READ_DEFAULT_FILE => 'vendor/promenadeco/doctrine-aws-auth/my.cnf',
         ],
     ],
     $ormConfig
@@ -65,6 +64,7 @@ Enable IAM authentication using the following environment variables:
 ```ini
 AWS_REGION=us-east-1
 RDS_USE_IAM=1
+LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1
 ```
 
 ## Limitations
@@ -82,6 +82,7 @@ Related resources with useful information:
 - [AWS Documentation](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html)
 - [AWS Knowledge Center](https://aws.amazon.com/premiumsupport/knowledge-center/users-connect-rds-iam/)
 - [AWS User Guide](https://docs.amazonaws.cn/en_us/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.Connecting.AWSCLI.html)
+- [MySQL Documentation](https://dev.mysql.com/doc/mysql-security-excerpt/5.7/en/cleartext-pluggable-authentication.html)
 
 ## Contributing
 
