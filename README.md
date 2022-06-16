@@ -67,6 +67,13 @@ AWS_REGION=us-east-1
 RDS_USE_IAM=1
 ```
 
+## Limitations
+
+For MySQL, IAM authentication appears to be only possible with `mysqli` [driver](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#driver).
+More common `pdo_mysql` driver cannot be used because of an unfortunate bug [#78467](https://bugs.php.net/bug.php?id=78467).
+
+The implementation has only been tested on MySQL. Other RDBMS may have their own unique limitations.
+
 ## Resources
 
 Related resources with useful information:
