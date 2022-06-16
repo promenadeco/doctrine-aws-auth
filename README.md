@@ -7,12 +7,20 @@ This library provides Amazon RDS database authentication using IAM for [Doctrine
 - RDS auth via IAM using short-lived tokens 
 - Token caching (for 10 min by default)
 - Support of EC2 and ECS environments
+- Support of PDO and MySQLi [drivers](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#driver)
 
 ## Usage
 
 Install the package using Composer:
 ```bash
 composer require promenadeco/doctrine-aws-auth
+```
+
+Enable IAM authentication in cleartext using the following environment variables:
+```ini
+AWS_REGION=us-east-1
+RDS_USE_IAM=1
+LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1
 ```
 
 ### Doctrine ORM
@@ -38,18 +46,36 @@ $ormConfig->setMiddlewares([
 
 $entityManager = EntityManager::create(
     [
-       'host' => 'example-db.abcdefghijkl.us-east-1.rds.amazonaws.com',
-       'port' => 3306,
-       'user' => 'iam_user',
-       'dbname' => 'test_db',
-       'driver' => 'mysqli',
-       'driverOptions' => [
-            'flags' => MYSQLI_CLIENT_SSL,
+        'host' => 'example-db.abcdefghijkl.us-east-1.rds.amazonaws.com',
+        'port' => 3306,
+        'user' => 'iam_user',
+        'dbname' => 'test_db',
+        'driver' => 'pdo_mysql',
+        'driverOptions' => [
+            PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/ca-certificates.crt',
+            PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
         ],
     ],
     $ormConfig
 );
 ```
+
+### Encryption
+
+Connection encryption is necessary to secure transmission of credentials as cleartext.
+
+The SSL configuration differs between drivers, for example:
+```php
+[
+    // ...
+    'driver' => 'mysqli',
+    'driverOptions' => [
+        'flags' => MYSQLI_CLIENT_SSL,
+    ],
+]
+```
+
+### Caching
 
 Activate token caching to stay within rate limits and improve performance:
 ```php
@@ -60,17 +86,11 @@ use Promenade\Doctrine\Aws\Auth\Token\CachingProxy;
 $tokenProvider = new CachingProxy($tokenProvider, $ormConfig->getMetadataCache());
 ```
 
-Enable IAM authentication using the following environment variables:
-```ini
-AWS_REGION=us-east-1
-RDS_USE_IAM=1
-LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN=1
-```
+By default, tokens have 15 min lifetime and are cached for 10 min to be renewed ahead of their expiration.
 
 ## Limitations
 
-For MySQL, IAM authentication appears to be only possible with `mysqli` [driver](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#driver).
-More common `pdo_mysql` driver cannot be used because of an unfortunate bug [#78467](https://bugs.php.net/bug.php?id=78467).
+IAM authentication relies on database client sending credentials in cleartext without hashing.
 
 The implementation has only been tested on MySQL. Other RDBMS may have their own unique limitations.
 
