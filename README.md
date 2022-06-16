@@ -67,6 +67,15 @@ AWS_REGION=us-east-1
 RDS_USE_IAM=1
 ```
 
+## Resources
+
+Related resources with useful information:
+- [sators/connect.php](https://gist.github.com/sators/38dbe25f655f1c783cb2c49e9873d58a)
+- [lead/doctrine-rds-iam-auth](https://github.com/Ulv/doctrine-aws-iam-rds-auth)
+- [AWS Documentation](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html)
+- [AWS Knowledge Center](https://aws.amazon.com/premiumsupport/knowledge-center/users-connect-rds-iam/)
+- [AWS User Guide](https://docs.amazonaws.cn/en_us/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.Connecting.AWSCLI.html)
+
 ## Contributing
 
 Pull Requests with fixes and improvements are welcome!
