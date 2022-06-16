@@ -71,3 +71,13 @@ Enable IAM authentication using the following environment variables:
 AWS_REGION=us-east-1
 RDS_USE_IAM=1
 ```
+
+## Contributing
+
+Pull Requests with fixes and improvements are welcome!
+
+## License
+
+Copyright © Promenade Group. All rights reserved.
+
+Licensed under the [Apache License, Version 2.0](https://github.com/promenadeco/doctrine-aws-auth/blob/main/LICENSE.txt).
