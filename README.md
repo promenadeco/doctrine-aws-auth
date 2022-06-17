@@ -60,7 +60,7 @@ $entityManager = EntityManager::create(
 );
 ```
 
-### Encryption
+#### Encryption
 
 Connection encryption is necessary to secure transmission of credentials as cleartext.
 
@@ -75,7 +75,7 @@ The SSL configuration differs between drivers, for example:
 ]
 ```
 
-### Caching
+#### Caching
 
 Activate token caching to stay within rate limits and improve performance:
 ```php
@@ -86,7 +86,41 @@ use Promenade\Doctrine\Aws\Auth\Token\CachingProxy;
 $tokenProvider = new CachingProxy($tokenProvider, $ormConfig->getMetadataCache());
 ```
 
-By default, tokens have 15 min lifetime and are cached for 10 min to be renewed ahead of their expiration.
+By default, tokens are good for 15 min and are cached for 10 min to be renewed well ahead of their expiration.
+
+### Symfony
+
+Register the DBAL driver middleware in `config/services.yaml`:
+
+```yaml
+services:
+    Promenade\Doctrine\Aws\Auth\Token\TokenProvider:
+        class: Promenade\Doctrine\Aws\Auth\Token\RdsToken
+
+    Promenade\Doctrine\Aws\Auth\Driver\IamMiddleware:
+        tags: ['doctrine.middleware']
+```
+
+#### Caching
+
+Activate the token caching and adjust its lifetime as needed:
+
+```yaml
+services:
+    Promenade\Doctrine\Aws\Auth\Driver\IamMiddleware:
+        arguments:
+            $tokenProvider: '@Promenade\Doctrine\Aws\Auth\Token\CachingProxy'
+
+    Promenade\Doctrine\Aws\Auth\Token\RdsToken:
+        arguments:
+            $lifetime: 15
+
+    Promenade\Doctrine\Aws\Auth\Token\CachingProxy:
+        arguments:
+            $lifetime: 14
+```
+
+Make sure tokens are valid some time beyond their cache expiration to compensate for potential clock drift.
 
 ## Limitations
 
