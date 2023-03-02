@@ -2,7 +2,7 @@
     "name": "promenadeco/doctrine-aws-auth",
     "description": "RDS authentication using IAM for Doctrine DBAL/ORM",
     "license": "Apache-2.0",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "require": {
         "php": ">=7.4",
         "aws/aws-sdk-php": "^3.225",
