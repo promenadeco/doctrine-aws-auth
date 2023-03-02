@@ -6,7 +6,9 @@ namespace Promenade\Doctrine\Aws\Auth\Driver;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\API\ExceptionConverter;
+use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Promenade\Doctrine\Aws\Auth\Token\TokenProvider;
 
 /**
@@ -30,7 +32,7 @@ class IamDecorator implements Driver
         $this->region = $region;
     }
     
-    public function connect(array $params)
+    public function connect(array $params): DriverConnection
     {
         $host = $params['host'] ?? 'localhost';
         $port = $params['port'] ?? 3306;
@@ -41,12 +43,12 @@ class IamDecorator implements Driver
         return $this->subject->connect($params);
     }
 
-    public function getDatabasePlatform()
+    public function getDatabasePlatform(): AbstractPlatform
     {
         return $this->subject->getDatabasePlatform();
     }
 
-    public function getSchemaManager(Connection $conn, AbstractPlatform $platform)
+    public function getSchemaManager(Connection $conn, AbstractPlatform $platform): AbstractSchemaManager
     {
         return $this->subject->getSchemaManager($conn, $platform);
     }
